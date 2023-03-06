@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  online_waiter_database:
+    container_name: online_waiter_database
+    image: postgres:14.1-alpine
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres'
+      POSTGRES_DB: 'online_waiter_database'
+    ports:
+    - '8510:5432'
+    restart: always
+    volumes:
+      - online_waiter_data:/var/lib/postgresql/data
+volumes:
+  online_waiter_data:
