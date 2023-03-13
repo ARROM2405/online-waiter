@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "orders",
     "food_and_beverage",
     "promotions",
+    "staff",
 ]
 
 MIDDLEWARE = [
