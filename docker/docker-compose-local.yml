@@ -9,8 +9,7 @@ services:
       POSTGRES_DB: 'online_waiter_database'
     ports:
     - '8510:5432'
-    restart: always
     volumes:
       - online_waiter_data:/var/lib/postgresql/data
 volumes:
-  online_waiter_data:
+  online_waiter_database:
