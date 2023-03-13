@@ -10,6 +10,7 @@ class FoodAndBeverageBase(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=8, decimal_places=2)
     order = models.ManyToManyField(to=Order)
+    units_available = models.PositiveIntegerField(null=True)
 
     class Meta:
         abstract = True

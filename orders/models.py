@@ -8,6 +8,9 @@ from .enums import OrderPaymentStatus, OrderPreparationSatus
 class Table(models.Model):
     number = models.PositiveIntegerField()
 
+    def __str__(self):
+        return f"Table {self.number}"
+
 
 class Order(models.Model):
     payment_status = EnumIntegerField(
@@ -17,8 +20,4 @@ class Order(models.Model):
         enum=OrderPreparationSatus, default=OrderPreparationSatus.NEW
     )
     table = models.ForeignKey(to=Table, on_delete=models.PROTECT)
-    waiter = models.ForeignKey(to=Waiter, on_delete=)
-
-    def get_archived_waiter =
-    # TODO: Think how to implement archived staff
-
+    waiter = models.ForeignKey(to=Waiter, on_delete=models.PROTECT)
