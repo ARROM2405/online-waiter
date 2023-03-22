@@ -2,7 +2,7 @@ from django.db import models
 from enumfields import EnumIntegerField
 
 from staff.models import Waiter
-from .enums import OrderPaymentStatus, OrderPreparationSatus
+from .enums import OrderPaymentStatus, OrderPreparationSatus, OrderingType
 
 
 class Table(models.Model):
@@ -19,5 +19,11 @@ class Order(models.Model):
     preparation_status = EnumIntegerField(
         enum=OrderPreparationSatus, default=OrderPreparationSatus.NEW
     )
-    table = models.ForeignKey(to=Table, on_delete=models.PROTECT)
-    waiter = models.ForeignKey(to=Waiter, on_delete=models.PROTECT)
+    table = models.ForeignKey(to=Table, on_delete=models.PROTECT, related_name="orders")
+    waiter = models.OneToOneField(
+        to=Waiter,
+        on_delete=models.PROTECT,
+        related_name="order",
+        null=True,
+    )
+    ordering_type = EnumIntegerField(enum=OrderingType, default=OrderingType.OFFLINE)

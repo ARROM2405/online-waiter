@@ -10,6 +10,6 @@ services:
     ports:
     - '8510:5432'
     volumes:
-      - online_waiter_data:/var/lib/postgresql/data
+      - online_waiter_database:/var/lib/postgresql/data
 volumes:
   online_waiter_database:

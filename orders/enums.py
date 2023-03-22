@@ -11,3 +11,8 @@ class OrderPreparationSatus(IntEnum):
 class OrderPaymentStatus(IntEnum):
     PAID = 1
     NOT_PAID = 2
+
+
+class OrderingType(IntEnum):
+    ONLINE = 1
+    OFFLINE = 2

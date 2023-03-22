@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "food_and_beverage",
     "promotions",
     "staff",
+    "payments",
 ]
 
 MIDDLEWARE = [
