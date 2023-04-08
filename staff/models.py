@@ -3,7 +3,10 @@ from django.db import models
 
 
 class Staff(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        to=User,
+        on_delete=models.CASCADE,
+    )
     currently_employed = models.BooleanField(default=True)
 
     class Meta:
@@ -11,4 +14,10 @@ class Staff(models.Model):
 
 
 class Waiter(Staff):
-    pass
+    def __str__(self):
+        return f"Waiter {self.user.username}"
+
+
+class Manager(Staff):
+    def __str__(self):
+        return f"Manager {self.user.username}"

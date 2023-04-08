@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from food_and_beverage.models import Dish, Beverage
+from food_and_beverage.models import Food, Beverage
 
 
-@admin.register(Dish)
+@admin.register(Food)
 class DishAdmin(admin.ModelAdmin):
     list_display = (
         "name",

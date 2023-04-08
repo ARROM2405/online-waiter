@@ -16,7 +16,7 @@ class FoodAndBeverageBase(models.Model):
         abstract = True
 
 
-class Dish(FoodAndBeverageBase):
+class Food(FoodAndBeverageBase):
     type = EnumIntegerField(enum=DishType)
 
     def __str__(self):
