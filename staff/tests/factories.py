@@ -11,6 +11,7 @@ class UserFactory(DjangoModelFactory):
     first_name = factory.Sequence(lambda n: f"first_name_{n}")
     last_name = factory.Sequence(lambda n: f"last_name_{n}")
     email = factory.Sequence(lambda n: f"user_{n}@mail.test")
+    password = factory.Sequence(lambda n: f"password_{n}")
     is_staff = False
     is_active = True
 

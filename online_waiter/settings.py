@@ -37,11 +37,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "django_extensions",
     "orders",
     "food_and_beverage",
     "promotions",
     "staff",
     "payments",
+    "authentication",
+    "utils",
 ]
 
 MIDDLEWARE = [
@@ -130,3 +135,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# TODO: Add custom authentication class.
+REST_FARAMEWORK = {"DEFAULT_AUTHENTICATION_CLASSES": []}
