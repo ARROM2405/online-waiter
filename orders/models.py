@@ -2,11 +2,12 @@ from django.db import models
 from enumfields import EnumIntegerField
 
 from staff.models import Waiter
-from .enums import OrderPaymentStatus, OrderPreparationSatus, OrderingType
+from .enums import OrderPaymentStatus, OrderPreparationSatus, OrderingType, TableStatus
 
 
 class Table(models.Model):
-    number = models.PositiveIntegerField()
+    number = models.PositiveIntegerField(unique=True)
+    status = EnumIntegerField(enum=TableStatus, default=TableStatus.FREE)
 
     def __str__(self):
         return f"Table {self.number}"
@@ -27,3 +28,4 @@ class Order(models.Model):
         null=True,
     )
     ordering_type = EnumIntegerField(enum=OrderingType, default=OrderingType.OFFLINE)
+    comment = models.TextField(blank=True, null=True)

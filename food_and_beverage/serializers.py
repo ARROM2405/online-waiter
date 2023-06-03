@@ -10,7 +10,7 @@ class FoodAndBeverageSerializerBase(serializers.ModelSerializer):
             "name",
             "description",
             "price",
-            "order",
+            "orders",
             "units_available",
         )
 
@@ -25,6 +25,28 @@ class BeverageSerializer(FoodAndBeverageSerializerBase):
     class Meta:
         model = Beverage
         fields = FoodAndBeverageSerializerBase.Meta.fields + (
-            "Type",
+            "type",
             "alcoholic",
         )
+
+
+class SlimFoodAndBeverageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FoodAndBeverageBase
+        fields = (
+            "id",
+            "name",
+            "price",
+        )
+
+
+class SlimFoodSerializer(SlimFoodAndBeverageSerializer):
+    class Meta:
+        model = Food
+        fields = SlimFoodAndBeverageSerializer.Meta.fields
+
+
+class SlimBeverageSerializer(SlimFoodAndBeverageSerializer):
+    class Meta:
+        model = Beverage
+        fields = SlimFoodAndBeverageSerializer.Meta.fields

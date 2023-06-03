@@ -6,10 +6,10 @@ from orders.models import Order
 
 
 class FoodAndBeverageBase(models.Model):
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
     description = models.TextField()
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    order = models.ManyToManyField(to=Order)
+    orders = models.ManyToManyField(to=Order, null=True, blank=True)
     units_available = models.PositiveIntegerField(null=True)
 
     class Meta:

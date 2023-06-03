@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from staff.models import Staff
+from staff.models import Staff, Waiter
 
 
 class StaffBaseSerializer(serializers.ModelSerializer):
@@ -8,14 +8,19 @@ class StaffBaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Staff
-        fields = ("currently_employed",)
+        fields = (
+            "id",
+            "currently_employed",
+            "username",
+        )
 
-    def get_username(self):
-        return self.user.username
+    def get_username(self, obj):
+        return obj.user.username
 
 
 class WaiterSerializer(StaffBaseSerializer):
-    pass
+    class Meta(StaffBaseSerializer.Meta):
+        model = Waiter
 
 
 class UserLogInRequestSerializer(serializers.Serializer):
