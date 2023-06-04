@@ -29,3 +29,9 @@ class Order(models.Model):
     )
     ordering_type = EnumIntegerField(enum=OrderingType, default=OrderingType.OFFLINE)
     comment = models.TextField(blank=True, null=True)
+    submit_timestamp = models.DateTimeField(auto_now_add=True)
+    last_update_timestamp = models.DateTimeField(
+        null=True,
+        blank=True,
+        auto_now=True,
+    )

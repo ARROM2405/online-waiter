@@ -23,6 +23,8 @@ class OrderViewSet(
         .order_by("-id")
     )
 
+    filterset_class = OrderFilterSet
+
     def get_permissions(self):
         permission_classes = [IsAuthenticated]
         if self.action == "update":
