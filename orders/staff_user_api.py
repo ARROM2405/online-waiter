@@ -2,6 +2,7 @@ from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from authentication.models import OrderUpdatePermission
+from orders.filtersets import OrderFilterSet
 from orders.models import Order
 from orders.serializers import (
     OrderListSerializer,

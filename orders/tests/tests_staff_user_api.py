@@ -70,6 +70,20 @@ class TestOrderViewSet(StaffApiTestBase):
             self.beverage_2.name,
         )
 
+    def test_list_filtered_by_id(self):
+        token = self._generate_token_for_existing_user(staff_user=self.manager_user)
+        response = self.client.get(
+            path=reverse("order-list"),
+            data={"id": self.order_1.id},
+            HTTP_AUTHORIZATION=f"Token {token.key}",
+        )
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        self.assertEqual(1, len(response.data))
+        self.assertEqual(self.order_1.id, response.data[0]["id"])
+
+    def test_list_filtered_by_table(self):
+        pass
+
     def test_list_orders_invalid_token(self):
         response = self.client.get(
             path=reverse("order-list"),
