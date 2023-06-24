@@ -21,12 +21,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="beverage",
             name="orders",
-            field=models.ManyToManyField(blank=True, null=True, to="orders.order"),
+            field=models.ManyToManyField(blank=True, to="orders.order"),
         ),
         migrations.AddField(
             model_name="food",
             name="orders",
-            field=models.ManyToManyField(blank=True, null=True, to="orders.order"),
+            field=models.ManyToManyField(blank=True, to="orders.order"),
         ),
         migrations.AlterField(
             model_name="beverage",

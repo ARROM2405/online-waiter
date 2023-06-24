@@ -7,6 +7,7 @@ from food_and_beverage.tests.factories import FoodFactory, BeverageFactory
 from orders.enums import OrderPreparationSatus
 from orders.models import Order
 from orders.tests.factories import OrderFactory
+from payments.tests.factories import TipFactory
 from utils.tests.test_base import StaffApiTestBase
 
 
@@ -82,7 +83,84 @@ class TestOrderViewSet(StaffApiTestBase):
         self.assertEqual(self.order_1.id, response.data[0]["id"])
 
     def test_list_filtered_by_table(self):
-        pass
+        token = self._generate_token_for_existing_user(staff_user=self.manager_user)
+        response_1 = self.client.get(
+            path=reverse("order-list"),
+            data={"table": self.order_1.table.id},
+            HTTP_AUTHORIZATION=f"Token {token.key}",
+        )
+
+        self.assertEqual(response_1.status_code, status.HTTP_200_OK)
+        data_1 = response_1.json()
+        self.assertEqual(len(data_1), 1)
+        self.assertEqual(data_1[0]["id"], self.order_1.id)
+
+        other_order = OrderFactory()  # Order to be filtered out
+        response_2 = self.client.get(
+            path=reverse("order-list"),
+            data={"table__in": f"{self.order_1.table.id},{self.order_2.table.id}"},
+            HTTP_AUTHORIZATION=f"Token {token.key}",
+        )
+
+        self.assertEqual(response_2.status_code, status.HTTP_200_OK)
+        data_2 = response_2.json()
+        self.assertEqual(len(data_2), 2)
+        self.assertEqual(data_2[0]["id"], self.order_2.id)
+        self.assertEqual(data_2[1]["id"], self.order_1.id)
+
+    def test_list_filtered_tipped(self):
+        token = self._generate_token_for_existing_user(staff_user=self.manager_user)
+        TipFactory(order=self.order_1)
+        response = self.client.get(
+            path=reverse("order-list"),
+            data={"is_tipped": True},
+            HTTP_AUTHORIZATION=f"Token {token.key}",
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["id"], self.order_1.id)
+
+    def test_filter_by_total_price(self):
+        additional_food = FoodFactory()
+        self.order_1.food_set.add(additional_food)
+        self.order_1.save()
+        order_with_no_items = OrderFactory()
+        token = self._generate_token_for_existing_user(staff_user=self.manager_user)
+        with self.subTest(msg="test_exact"):
+            response = self.client.get(
+                path=reverse("order-list"),
+                data={"items_total_price": "20.00"},
+                HTTP_AUTHORIZATION=f"Token {token.key}",
+            )
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            data = response.json()
+            self.assertEqual(len(data), 1)
+            self.assertEqual(data[0]["id"], self.order_2.id)
+
+        with self.subTest(msg="test_lt"):
+            with self.subTest(msg="test_exact"):
+                response = self.client.get(
+                    path=reverse("order-list"),
+                    data={"items_total_price__lt": "25.00"},
+                    HTTP_AUTHORIZATION=f"Token {token.key}",
+                )
+                self.assertEqual(response.status_code, status.HTTP_200_OK)
+                data = response.json()
+                self.assertEqual(len(data), 1)
+                self.assertEqual(data[0]["id"], self.order_2.id)
+
+        with self.subTest(msg="test_lt"):
+            with self.subTest(msg="test_exact"):
+                response = self.client.get(
+                    path=reverse("order-list"),
+                    data={"items_total_price__gt": "25.00"},
+                    HTTP_AUTHORIZATION=f"Token {token.key}",
+                )
+                self.assertEqual(response.status_code, status.HTTP_200_OK)
+                data = response.json()
+                self.assertEqual(len(data), 1)
+                self.assertEqual(data[0]["id"], self.order_1.id)
 
     def test_list_orders_invalid_token(self):
         response = self.client.get(

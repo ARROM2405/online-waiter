@@ -1,4 +1,6 @@
+from computedfields.models import ComputedFieldsModel, computed
 from django.db import models
+from django.db.models import Sum
 from enumfields import EnumIntegerField
 
 from staff.models import Waiter
@@ -13,7 +15,7 @@ class Table(models.Model):
         return f"Table {self.number}"
 
 
-class Order(models.Model):
+class Order(ComputedFieldsModel):
     payment_status = EnumIntegerField(
         enum=OrderPaymentStatus, default=OrderPaymentStatus.NOT_PAID
     )
@@ -35,3 +37,34 @@ class Order(models.Model):
         blank=True,
         auto_now=True,
     )
+
+    @computed(
+        models.DecimalField(
+            max_digits=10,
+            decimal_places=2,
+            null=True,
+            blank=True,
+        ),
+        depends=[("food_set", ["price"])],
+    )
+    def total_food_price(self):
+        if not self.pk:
+            return None
+        if self.food_set.exists():
+            return self.food_set.aggregate(Sum("price"))["price__sum"]
+        return None
+
+    @computed(
+        models.DecimalField(
+            max_digits=10,
+            decimal_places=2,
+            null=True,
+            blank=True,
+        )
+    )
+    def total_beverage_price(self):
+        if not self.pk:
+            return None
+        if self.beverage_set.exists():
+            return self.beverage_set.aggregate(Sum("price"))["price__sum"]
+        return None
